@@ -547,9 +547,6 @@ if (channel_data->cafile == NULL){
 	    (curl_easy_setopt(channel_curl->handle, CURLOPT_REDIR_PROTOCOLS,
 			      CURLPROTO_HTTP | CURLPROTO_HTTPS) != CURLE_OK) ||
 	    (curl_easy_setopt(channel_curl->handle,
-			      CURLOPT_CAINFO,
-			      channel_data->cafile) != CURLE_OK) ||
-	    (curl_easy_setopt(channel_curl->handle,
 			      CURLOPT_SSLKEY,
 			      channel_data->sslkey) != CURLE_OK) ||
 	    (curl_easy_setopt(channel_curl->handle,
@@ -558,6 +555,17 @@ if (channel_data->cafile == NULL){
         (curl_easy_setopt(channel_curl->handle,
                   CURLOPT_POSTREDIR,
                   CURL_REDIR_POST_ALL) != CURLE_OK)) {
+		result = CHANNEL_EINIT;
+		goto cleanup;
+	}
+
+	/* Only use cafile when set, otherwise let curl use
+	 * the default system location for cacert bundle
+	 */
+	if ((channel_data->cafile) &&
+            (curl_easy_setopt(channel_curl->handle,
+			       CURLOPT_CAINFO,
+			       channel_data->cafile) != CURLE_OK)) {
 		result = CHANNEL_EINIT;
 		goto cleanup;
 	}
