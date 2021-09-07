@@ -526,12 +526,6 @@ channel_op_res_t channel_set_options(channel_t *this, channel_data_t *channel_da
 	channel_curl_t *channel_curl = this->priv;
 	channel_op_res_t result = CHANNEL_OK;
 
-if (channel_data->cafile == NULL){
-	DEBUG("cafile string is NULL\n");
-} else {
-	DEBUG("cafile string is not NULL %s\n", channel_data->cafile);
-}
-
 	if ((curl_easy_setopt(channel_curl->handle, CURLOPT_URL,
 			      channel_data->url) != CURLE_OK) ||
 	    (curl_easy_setopt(channel_curl->handle, CURLOPT_USERAGENT,
